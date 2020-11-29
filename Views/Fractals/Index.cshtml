@@ -1,0 +1,78 @@
+﻿@model CGlab.Models.Fractals.Flactal
+@{
+    ViewData["Title"] = "Fractals";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center" style="height:100%">
+    <div class="row" style="margin-left: unset;margin-right:unset; height:100% ">
+        <div class="col-4">
+            <div class="row input-group" style="margin-left: unset;margin-right:unset">
+                <span class="input-group-addon input-search-custom-adon selector_label">Тип Фракталу: </span>
+                @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
+            </div>
+            <div class="row params_box" style="vertical-align: middle;">
+                <div class="col" style="padding:0;margin:0;">
+                    <div class="row">
+                        <div class="col">
+                            <span class="selector_label">К-кість ітерацій: </span>
+                        </div>
+                        <div class="col">
+                            @Html.TextBoxFor(m => m.IterationCount, new { @class = "frac_params_input" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span class="selector_label">Швидкість: </span>
+                        </div>
+                        <div class="col">
+                            @Html.TextBoxFor(m => m.Speed, new { @class = "frac_params_input" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span class="selector_label">Колір: </span>
+                        </div>
+                        <div class="col">
+                            @Html.DropDownListFor(m => m.Colors, new SelectList(Model.Colors), new { @class = "frac_params_input" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row botton_button_set">
+                <button class="frac_btn" onclick="buildFract()">Побудувати</button>
+                <script>
+                    function buildFract() {
+                        let iterations = document.getElementById("IterationCount").value;
+                        let speed = document.getElementById("Speed").value;
+                        let type = document.getElementById("FlactalTypes").value;
+                        build(iterations, speed, type);
+                    }
+                </script>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="fractal_output">
+                <canvas id="layer" width="600" height="600"></canvas>
+                <script>
+                    draw();
+                    function draw() {
+                        let canvas = document.getElementById("layer")
+                        var ctx = canvas.getContext('2d');
+                        ctx.canvas.width = canvas.parentNode.clientWidth;
+                        ctx.canvas.height = canvas.parentNode.clientHeight;
+                        //...drawing code...
+                    }
+                </script>
+            </div>
+        </div>
+        <script src="~/js/BuildFractals.js" asp-append-version="true"></script>
+        <script src="~/js/Fern.js"></script>
+        <script src="~/js/Koch.js" asp-append-version="true"></script>
+        <script src="~/js/DragonIFS.js" asp-append-version="true"></script>
+        <script src="~/js/DragonGeom.js" asp-append-version="true"></script>
+        
+
+    </div>
+</div>
+
