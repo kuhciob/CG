@@ -18,7 +18,7 @@
                     <a class="navbar-brand" asp-area="" asp-controller="Fractals" asp-action="Index">Фрактали</a>
                 </div>
                 <div class="col-sm navitem">
-                    <a class="navbar-brand" asp-area="" asp-controller="" asp-action="">Кольорні моделі</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="ColorsSystems" asp-action="ColorModel1">Кольорні моделі</a>
                 </div>
                 <div class="col-sm navitem">
                     <a class="navbar-brand" asp-area="" asp-controller="" asp-action="">Перетворення</a>
@@ -30,7 +30,7 @@
         </nav>
     </header>
     <div class="main_content">
-        <main role="main" class="pb-3" style="height:90%">
+        <main role="main" class="pb-3" style="height:-webkit-fill-available">
             @RenderBody()
         </main>
     </div>
@@ -39,7 +39,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script src="https://code.iconify.design/1/1.0.6/iconify.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

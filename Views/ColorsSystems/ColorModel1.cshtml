@@ -1,0 +1,223 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center" style="height:-webkit-fill-available">
+
+    <div class="row" style="margin-left: unset;margin-right:unset; ">
+        <div class="col-4">
+            <div class="image-upload">
+                <label for="file-input" style=" display: inline-flex;margin: 0; padding: 0.5vmin; padding-left: 10vmin;width: -webkit-fill-available">
+                    <span style="padding-right: 2vmin">Оберіть зображення</span>
+                    <div class="upload_iconbtn">
+                        <span class="iconify action_icon" data-inline="false" data-icon="mdi-light:picture"></span>
+                    </div>
+                </label>
+                <input id="file-input" type="file" style="width:100%; height:100%" onchange="read(files[0])" />
+                <script>
+                    var primatyColors = new Array(3);
+                    function id(i) { return document.getElementById(i) }
+                    function read(file) {
+                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+                        for (let i = 0; i < canvasIDs.length; ++i) {
+                            let d = document,
+                                canvas = id(canvasIDs[i]),
+                                ctx = canvas.getContext('2d'),
+                                img = new Image();
+
+                            console.log(canvas);
+                            img.src = URL.createObjectURL(file);
+                            img.onload = function () {
+
+                                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);                                   
+
+                                switch (i) {
+                                    case 1:
+                                        getPixelStatus(canvas);
+                                        break;
+                                    case 2:
+                                        ImageRGBToCmyk(canvas);
+                                        break;
+                                    case 3:
+                                        ImageRGBToHSL(canvas);
+                                        break;
+                                }
+                                primatyColors[i] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            }
+                        }
+                        
+                    }
+                    function getPixelStatus(canvas) {
+                        let ctx = canvas.getContext('2d');
+                        let data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                        let out = id('output');
+                        canvas.onmousemove = function (e) {
+                            var i = (e.layerX + e.layerY * canvas.width) * 4;
+
+                            out.innerHTML = 'Координати:</br><b>x:</b> ' + e.layerX + "; "+ '<b>Y:</b> ' + e.layerY +
+                                '</br><b>RGBa(</b>(' + data[i] + "; " + data[i + 1] + "; " + data[i + 2] + "; " + data[i + 3] + '<b>)</b>';
+                            out.parentNode.style.borderColor = 'rgba(' + data[i] + ',' + data[i + 1] + ',' + data[i + 2] + ',' + data[i + 3] + ')';
+                        };
+                    }
+                </script>
+            </div>
+        </div>
+        <div class="col-8">
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: unset;margin-right:unset;height: -webkit-fill-available; padding-bottom: 10vmin; margin-top: 2vmin;">
+        <div class="col-4">
+            <div class="row params_box" style="vertical-align: middle;">
+                <div class="col" style="padding:0;margin:0;">
+                    <div class="row">
+                        <span class="param_label_center">Яскравість: </span>
+                        <div class="slidecontainer">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <span class="param_label_center">Світлота: </span>
+                        <div class="slidecontainer">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange2" onchange="Lightness()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <span class="param_label_center">Насиченість: </span>
+                        <div class="slidecontainer">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange3" onchange="Saturation()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <span class="param_label_center">Насиченість по жовтому: </span>
+                        <div class="slidecontainer">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange3" onchange="SaturationYellow()">
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    
+                    function Saturation() {
+                        let incVal = document.getElementById("myRange3").value;
+                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+                        for (let i = 0; i < canvasIDs.length; ++i) {
+
+                            changeSaturation(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
+                        }
+                    }
+                    function SaturationYellow() {
+                        let incVal = document.getElementById("myRange3").value;
+                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+                        for (let i = 0; i < canvasIDs.length; ++i) {
+                            changeSaturationYellow(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
+                        }
+                    }
+                    function Lightness() {
+                        let incVal = document.getElementById("myRange2").value;
+                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+                        for (let i = 0; i < canvasIDs.length; ++i) {
+
+                            changeLightness(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
+                        }
+                    }
+                </script>
+            </div>
+            <div class="row params_box" style="vertical-align: middle;">
+                <span style="font-size:x-large;width:100%">Стан Пікселя:</span>
+                </br>
+                <div id="output"></div>
+            </div>
+            <div class="row botton_button_set">
+                <button class="action_btn " onclick="">Зберегти<span class="iconify action_icon" data-inline="false" data-icon="mdi-light:content-save"></span></button>
+                <script>
+
+                </script>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="color_output">
+                <div class="row" style="margin-left: unset;margin-right:unset">
+                    <div class="col-sm " style="padding:0;">
+                        <div class="color_output_tab_btn" id="model_btn_1">
+                            <batton class="navbar-brand" onclick="gotoModel(1)">Зображення</batton>
+                        </div>
+                    </div>
+                    <div class="col-sm" style="padding:0;">
+                        <div class="color_output_tab_btn_anactive" id="model_btn_2">
+                            <batton class="navbar-brand " onclick="gotoModel(2)">CMYK</batton>
+                        </div>
+                    </div>
+                    <div class="col-sm" style="padding:0;">
+                        <div class="color_output_tab_btn_anactive" id="model_btn_3">
+                            <batton class="navbar-brand " onclick="gotoModel(3)">HLS</batton>
+                        </div>
+                    </div>
+                    <script>
+                        function gotoModel(numb) {
+                            switch (numb){
+                                case 1:
+                                    document.getElementById("model_btn_1").className = "color_output_tab_btn";
+                                    document.getElementById("color_output_tab_1").style.display = "initial";
+
+                                    document.getElementById("model_btn_2").className = "color_output_tab_btn_anactive";
+                                    document.getElementById("color_output_tab_2").style.display = "none";
+                                    document.getElementById("model_btn_3").className = "color_output_tab_btn_anactive";
+                                    document.getElementById("color_output_tab_3").style.display = "none";
+
+                                    getPixelStatus(id("canvas1"));
+                                    break;
+                                case 2:
+                                    document.getElementById("model_btn_2").className = "color_output_tab_btn";
+                                    document.getElementById("color_output_tab_2").style.display = "initial";
+
+                                    document.getElementById("model_btn_1").className = "color_output_tab_btn_anactive";
+                                    document.getElementById("color_output_tab_1").style.display = "none";
+                                    document.getElementById("model_btn_3").className = "color_output_tab_btn_anactive";
+                                    document.getElementById("color_output_tab_3").style.display = "none";
+
+                                    getPixelStatus(id("canvas2"));
+                                    break;
+                                case 3:
+                                    document.getElementById("model_btn_3").className = "color_output_tab_btn";
+                                    document.getElementById("color_output_tab_3").style.display = "initial";
+
+                                    document.getElementById("model_btn_1").className = "color_output_tab_btn_anactive";
+                                    document.getElementById("color_output_tab_1").style.display = "none";
+                                    document.getElementById("model_btn_2").className = "color_output_tab_btn_anactive";
+                                    document.getElementById("color_output_tab_2").style.display = "none";
+
+                                    getPixelStatus(id("canvas3"));
+                                    break;
+                            }                             
+                        }
+                    </script>
+                </div>
+
+                <div class="color_output_tab" color_output_tab>
+
+                    <div class="text-center" style="height:-webkit-fill-available;" id="color_output_tab_1">
+                        <div class="row" style="margin-left: unset; margin-right: unset ">
+                            <canvas id="canvas1" width="1000" height="700"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="text-center" style="height:-webkit-fill-available; display: none;" id="color_output_tab_2">
+                        <div class="row" style="margin-left: unset; margin-right: unset ">
+                            <canvas id="canvas2" width="1000" height="700"></canvas>
+                        </div>
+                    </div>
+                    <div class="text-center" style="height:-webkit-fill-available; display: none;" id="color_output_tab_3">
+                        <div class="row" style="margin-left: unset; margin-right: unset ">
+                            <canvas id="canvas3" width="1000" height="700"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<script src="~/js/ColorModels.js" asp-append-version="true"></script>

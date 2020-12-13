@@ -1,7 +1,7 @@
 ﻿function dragonIFS(step, layer) {
-    var scale = 7;
-    var ox = -layer.canvas.width / 2;
-    var oy = -layer.canvas.height / 2;
+    var scale = 9;
+    var ox = -450;
+    var oy = -450;
 
     var c = c1 = c2 = c2x = c2y = x = y = 0, d = 1, step = 1 << step;
 

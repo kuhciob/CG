@@ -4,13 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center" style="height:100%">
-    <div class="row" style="margin-left: unset;margin-right:unset; height:100% ">
+<div class="text-center" style="height:-webkit-fill-available">
+    <div class="row" style="margin-left: unset;margin-right:unset; ">
+        <div class="row input-group" style="margin-left: unset;margin-right:unset">
+            <span class="input-group-addon input-search-custom-adon selector_label">Тип Фракталу: </span>
+            @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
+        </div>
+    </div>
+    <div class="row" style="margin-left: unset;margin-right:unset;height: -webkit-fill-available; padding-bottom: 10vmin; margin-top: 2vmin;">
         <div class="col-4">
-            <div class="row input-group" style="margin-left: unset;margin-right:unset">
-                <span class="input-group-addon input-search-custom-adon selector_label">Тип Фракталу: </span>
-                @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
-            </div>
+            
             <div class="row params_box" style="vertical-align: middle;">
                 <div class="col" style="padding:0;margin:0;">
                     <div class="row">
@@ -40,7 +43,9 @@
                 </div>
             </div>
             <div class="row botton_button_set">
-                <button class="frac_btn" onclick="buildFract()">Побудувати</button>
+                <button class="action_btn " style="margin-bottom:2vmin;" onclick="buildFract()">Побудувати <span class="iconify action_icon" data-inline="false" data-icon="mdi-light:play"></span></button>
+
+                <button class="action_btn " onclick="">Зберегти <span class="iconify action_icon" data-inline="false" data-icon="mdi-light:content-save"></span></button>
                 <script>
                     function buildFract() {
                         let iterations = document.getElementById("IterationCount").value;
@@ -53,16 +58,16 @@
         </div>
         <div class="col-8">
             <div class="fractal_output">
-                <canvas id="layer" width="600" height="600"></canvas>
+                <canvas id="layer" width="1000" height="760"></canvas>
                 <script>
-                    draw();
-                    function draw() {
-                        let canvas = document.getElementById("layer")
-                        var ctx = canvas.getContext('2d');
-                        ctx.canvas.width = canvas.parentNode.clientWidth;
-                        ctx.canvas.height = canvas.parentNode.clientHeight;
-                        //...drawing code...
-                    }
+                                    //draw();
+                                    //function draw() {
+                                    //    let canvas = document.getElementById("layer")
+                                    //    var ctx = canvas.getContext('2d');
+                                    //    ctx.canvas.width = canvas.parentNode.clientWidth;
+                                    //    ctx.canvas.height = canvas.parentNode.clientHeight;
+                                    //    //...drawing code...
+                                    //}
                 </script>
             </div>
         </div>
@@ -71,7 +76,7 @@
         <script src="~/js/Koch.js" asp-append-version="true"></script>
         <script src="~/js/DragonIFS.js" asp-append-version="true"></script>
         <script src="~/js/DragonGeom.js" asp-append-version="true"></script>
-        
+
 
     </div>
 </div>
