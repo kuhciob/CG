@@ -80,11 +80,10 @@ function rgbToCmyk(r, g, b) {
     if (Y < K)
         K = Y;
 
-    C = (C - K) / 1 - K;
-    M = (M - K) / 1 - K;
-    Y = (Y - K) / 1 - K;
+    C = (C - K) / (1 - K);
+    M = (M - K) / (1 - K);
+    Y = (Y - K) / (1 - K);
 
-    //console.log(C, M, Y, K);
     return [C, M, Y, K];
 }
 
@@ -94,7 +93,7 @@ function ImageRGBToCmyk(canvas) {
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let red, green, blue;
     let cyan, magenta, black;
-    console.log(imageData.data.length);
+
     for (let i = 0; i < imageData.data.length; i += 4) {
         red = imageData.data[i]; // 
         green = imageData.data[i + 1];  
@@ -123,9 +122,9 @@ function ImageRGBToHSL(canvas) {
         green = imageData.data[i + 1];
         blue = imageData.data[i + 2];
 
-        let HSL = rgbToHsl(red, green, blue);
+        let HSL = rgbToHsl2(red, green, blue);
 
-        let newRgb = hslToRgb(HSL[0], HSL[1], HSL[2]);
+        let newRgb = hslToRgb2(HSL[0], HSL[1], HSL[2]);
         imageData.data[i] = newRgb[0];
         imageData.data[i + 1] = newRgb[1];
         imageData.data[i + 2] = newRgb[2];
@@ -134,34 +133,7 @@ function ImageRGBToHSL(canvas) {
     ctx.putImageData(imageData, 0, 0);
 }
 
-function changeSaturationYellow(canvas, yellowDelta,imageData) {
-    //need CMYK
-    let ctx = canvas.getContext('2d');
-    //let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let red, green, blue;
-    let cyan, magenta, yellow, black;
 
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        red = imageData.data[i];
-        green = imageData.data[i + 1];  
-        blue = imageData.data[i + 2];   
-
-        let cmyk = rgbToCmyk(red, green, blue);
-        yellow = cmyk[2] + yellowDelta
-        if (yellow < 0) {
-            yellow = 0;
-        }
-        if (yellow >= 100)
-            yellow = 100;
-
-        let newRgb = cmykToRgb(cmyk[0], cmyk[1], yellow, cmyk[3]);
-        imageData.data[i] = newRgb[0];  // установка серого цвета
-        imageData.data[i + 1] = newRgb[1];
-        imageData.data[i + 2] = newRgb[2];
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-}
 
 
 
@@ -250,16 +222,16 @@ HSVtoRGB = function (color) {
     return [r, g, b];
 }
 
-function changeSaturation(canvas, value, imageData) {
+function changeSaturation(canvas, value, origimageData) {
     let ctx = canvas.getContext('2d');
-    //let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let red, green, blue;
     let cyan, magenta, yellow, black;
 
     for (let i = 0; i < imageData.data.length; i += 4) {
-        red = imageData.data[i];
-        green = imageData.data[i + 1];
-        blue = imageData.data[i + 2];
+        red = origimageData.data[i];
+        green = origimageData.data[i + 1];
+        blue = origimageData.data[i + 2];
 
         var hsv = RGBtoHSV([red, green, blue]);
         hsv[1] *= 1 + (value / 100);
@@ -272,16 +244,108 @@ function changeSaturation(canvas, value, imageData) {
 
     ctx.putImageData(imageData, 0, 0);
 }
-function changeLightness(canvas, value, imageData) {
+function ApplyChangesToImage(canvas, origimageData, deltaYellow, deltaSaturation, deltaLight, deltaH) {
+
     let ctx = canvas.getContext('2d');
-    //let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let red, green, blue;
+    let cyan, magenta, black;
+
+    let start, end;
+
+
+    SelectedArea.x = document.getElementById("canvAreaX").value;
+    SelectedArea.y = document.getElementById("canvAreaY").value;
+    SelectedArea.h = document.getElementById("canvAreaH").value;
+    SelectedArea.w = document.getElementById("canvAreaW").value;
+    //if (SelectedArea.x === '' || SelectedArea.y === '' || SelectedArea.h === '' || SelectedArea.w === '' ||
+    // (SelectedArea.x == 0 && SelectedArea.y == 0 && SelectedArea.h == 0 && SelectedArea.w == 0)) {
+
+    //    start = 0;
+    //    end = imageData.data.length;
+    //}
+    //else {
+    //    console.log('canv WIDTH = '+ canvas.width )
+    //    start = ((SelectedArea.y * canvas.width) + SelectedArea.x) * 4;
+    //    end = (((SelectedArea.h - SelectedArea.y) * canvas.width) + (SelectedArea.w - SelectedArea.x)) * 4;
+    //    //end = ((SelectedArea.y + SelectedArea.h) * canvas.width + (SelectedArea.x + SelectedArea.w)) * 4;
+    //}
+    if (SelectedArea.x === '' || SelectedArea.y === '' || SelectedArea.h === '' || SelectedArea.w === '' ||
+     (SelectedArea.x == 0 && SelectedArea.y == 0 && SelectedArea.h == 0 && SelectedArea.w == 0)) {
+
+        SelectedArea.x = parseInt(0);
+        SelectedArea.y = parseInt(0);
+        SelectedArea.h = parseInt(canvas.height);
+        SelectedArea.w = parseInt(canvas.width);
+    }
+    if (SelectedArea.h > canvas.height ) {
+        SelectedArea.h = canvas.height
+    }
+    if (SelectedArea.w > canvas.width) {
+        SelectedArea.w = canvas.width
+    }
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+
+        let currX = (i / 4) % canvas.width;
+        let currY = ((i / 4) - currX) / canvas.width;
+
+
+        if ((parseInt(currX) >= parseInt(SelectedArea.x)) && (currX <= (parseInt(SelectedArea.x) + parseInt( SelectedArea.w)))
+            && (parseInt(currY) >= parseInt(SelectedArea.y)) && (currY <= (parseInt(SelectedArea.y) + parseInt(SelectedArea.h))) )
+        {
+            red = origimageData.data[i];
+            green = origimageData.data[i + 1];
+            blue = origimageData.data[i + 2];
+
+            let cmyk = rgbToCmyk(red, green, blue);
+            let yellow = cmyk[2] * (1 + (deltaYellow / 100));
+            if (yellow < 0) {
+                yellow = 0;
+            }
+            if (yellow >= 100)
+                yellow = 100;
+
+            let newRgb = cmykToRgb(cmyk[0], cmyk[1], yellow, cmyk[3]);
+            imageData.data[i] = newRgb[0];
+            imageData.data[i + 1] = newRgb[1];
+            imageData.data[i + 2] = newRgb[2];
+
+            red = imageData.data[i];
+            green = imageData.data[i + 1];
+            blue = imageData.data[i + 2];
+
+            var hsv = RGBtoHSV([red, green, blue]);
+            hsv[2] *= 1 + (deltaLight / 100);
+            hsv[1] *= 1 + (deltaSaturation / 100);
+            //hsv[0] *= 1 + (deltaH / 100);
+            let dH = Math.abs((360 * deltaH / 100));
+            if (dH > 360)
+                hsv[0] += 360 - dH;
+            else
+                hsv[0] += dH;
+
+            newRgb = HSVtoRGB(hsv);
+
+
+            imageData.data[i] = newRgb[0];
+            imageData.data[i + 1] = newRgb[1];
+            imageData.data[i + 2] = newRgb[2];   
+        }
+        
+    }
+    ctx.putImageData(imageData, 0, 0);
+}
+function changeLightness(canvas, value, origimageData) {
+    let ctx = canvas.getContext('2d');
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let red, green, blue;
     let cyan, magenta, yellow, black;
 
     for (let i = 0; i < imageData.data.length; i += 4) {
-        red = imageData.data[i];
-        green = imageData.data[i + 1];
-        blue = imageData.data[i + 2];
+        red = origimageData.data[i];
+        green = origimageData.data[i + 1];
+        blue = origimageData.data[i + 2];
 
         var hsv = RGBtoHSV([red, green, blue]);
         hsv[2] *= 1 + (value / 100);
@@ -294,7 +358,34 @@ function changeLightness(canvas, value, imageData) {
 
     ctx.putImageData(imageData, 0, 0);
 }
+function changeSaturationYellow(canvas, yellowDelta, origimageData) {
+    //need CMYK
+    let ctx = canvas.getContext('2d');
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let red, green, blue;
+    let cyan, magenta, yellow, black;
 
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        red = origimageData.data[i];
+        green = origimageData.data[i + 1];
+        blue = origimageData.data[i + 2];
+
+        let cmyk = rgbToCmyk(red, green, blue);
+        yellow = cmyk[2] * (1 + (yellowDelta / 100));
+        if (yellow < 0) {
+            yellow = 0;
+        }
+        if (yellow >= 100)
+            yellow = 100;
+
+        let newRgb = cmykToRgb(cmyk[0], cmyk[1], yellow, cmyk[3]);
+        imageData.data[i] = newRgb[0];  // установка серого цвета
+        imageData.data[i + 1] = newRgb[1];
+        imageData.data[i + 2] = newRgb[2];
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+}
 
 function rgbToHsl2(r, g, b) {
     r /= 255, g /= 255, b /= 255;

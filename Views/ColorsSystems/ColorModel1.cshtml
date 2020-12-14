@@ -17,6 +17,8 @@
                 <input id="file-input" type="file" style="width:100%; height:100%" onchange="read(files[0])" />
                 <script>
                     var primatyColors = new Array(3);
+                    var SelectedArea = { x: 0, y: 0, w: 1000, h: 700 };
+
                     function id(i) { return document.getElementById(i) }
                     function read(file) {
                         let canvasIDs = ["canvas1", "canvas2", "canvas3"];
@@ -26,27 +28,28 @@
                                 ctx = canvas.getContext('2d'),
                                 img = new Image();
 
-                            console.log(canvas);
+   
                             img.src = URL.createObjectURL(file);
                             img.onload = function () {
-
-                                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);                                   
+                                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
 
                                 switch (i) {
-                                    case 1:
+                                    case 0:
                                         getPixelStatus(canvas);
                                         break;
-                                    case 2:
+                                    case 1:
                                         ImageRGBToCmyk(canvas);
                                         break;
-                                    case 3:
+                                    case 2:
                                         ImageRGBToHSL(canvas);
                                         break;
                                 }
                                 primatyColors[i] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                //SupportSelected(i, img);
                             }
                         }
-                        
+
                     }
                     function getPixelStatus(canvas) {
                         let ctx = canvas.getContext('2d');
@@ -55,7 +58,7 @@
                         canvas.onmousemove = function (e) {
                             var i = (e.layerX + e.layerY * canvas.width) * 4;
 
-                            out.innerHTML = 'Координати:</br><b>x:</b> ' + e.layerX + "; "+ '<b>Y:</b> ' + e.layerY +
+                            out.innerHTML = 'Координати:</br><b>x:</b> ' + e.layerX + "; " + '<b>Y:</b> ' + e.layerY +
                                 '</br><b>RGBa(</b>(' + data[i] + "; " + data[i + 1] + "; " + data[i + 2] + "; " + data[i + 3] + '<b>)</b>';
                             out.parentNode.style.borderColor = 'rgba(' + data[i] + ',' + data[i + 1] + ',' + data[i + 2] + ',' + data[i + 3] + ')';
                         };
@@ -72,32 +75,45 @@
             <div class="row params_box" style="vertical-align: middle;">
                 <div class="col" style="padding:0;margin:0;">
                     <div class="row">
-                        <span class="param_label_center">Яскравість: </span>
+                        <span class="param_label_center">Тон: </span>
                         <div class="slidecontainer">
-                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange1">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <span class="param_label_center">Світлота: </span>
-                        <div class="slidecontainer">
-                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange2" onchange="Lightness()">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange1" onchange="ApplyChange()">
                         </div>
                     </div>
                     <div class="row">
                         <span class="param_label_center">Насиченість: </span>
                         <div class="slidecontainer">
-                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange3" onchange="Saturation()">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange3" onchange="ApplyChange()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <span class="param_label_center">Світлота: </span>
+                        <div class="slidecontainer">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange2" onchange="ApplyChange()">
                         </div>
                     </div>
                     <div class="row">
                         <span class="param_label_center">Насиченість по жовтому: </span>
                         <div class="slidecontainer">
-                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange3" onchange="SaturationYellow()">
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="myRange4" onchange="ApplyChange()">
                         </div>
                     </div>
                 </div>
                 <script>
-                    
+
+                    function ApplyChange() {
+                        let deltaLight = document.getElementById("myRange2").value;
+                        let deltaH = document.getElementById("myRange1").value;
+                        let deltaY = document.getElementById("myRange4").value;
+                        let deltaS = document.getElementById("myRange3").value;
+
+                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+                        for (let i = 0; i < canvasIDs.length; ++i) {
+
+                            ApplyChangesToImage(document.getElementById(canvasIDs[i]), primatyColors[i], deltaY, deltaS, deltaLight, deltaH);
+                        }
+
+                    }
                     function Saturation() {
                         let incVal = document.getElementById("myRange3").value;
                         let canvasIDs = ["canvas1", "canvas2", "canvas3"];
@@ -107,7 +123,7 @@
                         }
                     }
                     function SaturationYellow() {
-                        let incVal = document.getElementById("myRange3").value;
+                        let incVal = document.getElementById("myRange4").value;
                         let canvasIDs = ["canvas1", "canvas2", "canvas3"];
                         for (let i = 0; i < canvasIDs.length; ++i) {
                             changeSaturationYellow(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
@@ -126,6 +142,14 @@
             <div class="row params_box" style="vertical-align: middle;">
                 <span style="font-size:x-large;width:100%">Стан Пікселя:</span>
                 </br>
+                <div id="output"></div>
+            </div>
+            <div class="row params_box" style="vertical-align: middle;">
+                <input type="number" id="canvAreaX" placeholder="X" min="0" max="1000"/>
+                <input type="number" id="canvAreaY" placeholder="Y" min="0" max="700"/>
+                <input type="number" id="canvAreaH" placeholder="W" min="0" max="700"/>
+                <input type="number" id="canvAreaW" placeholder="H" min="0" max="1000"/>
+
                 <div id="output"></div>
             </div>
             <div class="row botton_button_set">
@@ -155,7 +179,7 @@
                     </div>
                     <script>
                         function gotoModel(numb) {
-                            switch (numb){
+                            switch (numb) {
                                 case 1:
                                     document.getElementById("model_btn_1").className = "color_output_tab_btn";
                                     document.getElementById("color_output_tab_1").style.display = "initial";
@@ -189,7 +213,7 @@
 
                                     getPixelStatus(id("canvas3"));
                                     break;
-                            }                             
+                            }
                         }
                     </script>
                 </div>
@@ -221,3 +245,4 @@
     </div>
 </div>
 <script src="~/js/ColorModels.js" asp-append-version="true"></script>
+<script src="~/js/SelectMultiRect.js" asp-append-version="true"></script>
