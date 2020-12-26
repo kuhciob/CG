@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center" style="height:-webkit-fill-available">
+
+    <div class="row" style="margin-left: unset;margin-right:unset; ">
+        <div class="col-4">
+        </div>
+        <div class="col-8">
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: unset;margin-right:unset;height: -webkit-fill-available; padding-bottom: 10vmin; margin-top: 2vmin;">
+        <div class="col-4">
+            
+ 
+            <div class="button_set">
+                <div style="text-align:center">
+                    <h3>Точки паралелограма:</h3>
+                </div>
+                <div class="">
+                    <fieldset class="border p-4" style="border: 3px solid #9F422D;">
+                        <legend style="text-align:start; width:auto">A</legend>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" class="form-control" id="inputPointAx" placeholder="X">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" id="inputPointAy" placeholder="Y">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="">
+                    <fieldset class="border p-4" style="border: 3px solid #9F422D;">
+                        <legend style="text-align:start; width:auto">B</legend>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" class="form-control" id="inputPointBx" placeholder="X">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control " id="inputPointBy" placeholder="Y">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="">
+                    <fieldset class="border p-4" style="border: 3px solid #9F422D;">
+                        <legend style="text-align:start; width:auto">C</legend>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" class="form-control" id="inputPointCx" placeholder="X">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" id="inputPointCy" placeholder="Y">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+                <div class="" style="padding:3vmin">
+                    <div style="text-align:center">
+                        <h4>Рівняння прямої:</h4>
+                    </div>
+                    <div class="row">
+                        <div class="">
+                            <h4 class="form-control move_figure_label_input">Y =</h4>
+                        </div>
+                        <div class="">
+                            <input type="number" class="form-control move_figure_param_input" id="inputLinePointK" placeholder="K">
+                        </div>
+                        <div class="">
+                            <h4 class="form-control move_figure_label_input"> X +</h4>
+                        </div>
+                        <div class="">
+                            <input type="number" class="form-control move_figure_param_input" id="inputLinePointB" placeholder="B">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="move_action_btn " onclick="BuildParallelogram()">Побудувати<span class="iconify action_icon" data-inline="false" data-icon="mdi-light:fast-forward"></span></button>
+                <button class="move_action_btn " onclick="ClearCoordCanvas()">Очистити</button>
+
+                
+
+
+
+
+            </div>
+        </div>
+        <div class="col-8">
+            <div>
+                <canvas class="move_output" id="MoveCanvas" width="1080" height="720"></canvas>
+            </div>
+            <div class="arrow_set">
+                <div class="row d-flex justify-content-center">
+                    <button class="arrow" onclick="MoveParallUp()">
+                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-up"></span>
+                    </button>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <button class="arrow" onclick="MoveParallLeft()">
+                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-left"></span>
+                    </button>
+                    <button class="arrow" onclick="MoveParallDown()">
+                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-down"></span>
+                    </button>
+                    <button class="arrow" onclick="MoveParallRight()">
+                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-right"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<script src="~/js/ColorModels.js" asp-append-version="true"></script>
+<script src="~/js/SelectMultiRect.js" asp-append-version="true"></script>
+<script src="~/js/affineTransformationScript.js" asp-append-version="true"></script>
+<script src="~/js/Move.js" asp-append-version="true"></script>

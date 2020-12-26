@@ -46,7 +46,7 @@
                                         break;
                                 }
                                 primatyColors[i] = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                                //SupportSelected(i, img);
+                                SupportSelected(canvas,i);
                             }
                         }
 
@@ -99,57 +99,11 @@
                         </div>
                     </div>
                 </div>
-                <script>
 
-                    function ApplyChange() {
-                        let deltaLight = document.getElementById("myRange2").value;
-                        let deltaH = document.getElementById("myRange1").value;
-                        let deltaY = document.getElementById("myRange4").value;
-                        let deltaS = document.getElementById("myRange3").value;
-
-                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
-                        for (let i = 0; i < canvasIDs.length; ++i) {
-
-                            ApplyChangesToImage(document.getElementById(canvasIDs[i]), primatyColors[i], deltaY, deltaS, deltaLight, deltaH);
-                        }
-
-                    }
-                    function Saturation() {
-                        let incVal = document.getElementById("myRange3").value;
-                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
-                        for (let i = 0; i < canvasIDs.length; ++i) {
-
-                            changeSaturation(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
-                        }
-                    }
-                    function SaturationYellow() {
-                        let incVal = document.getElementById("myRange4").value;
-                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
-                        for (let i = 0; i < canvasIDs.length; ++i) {
-                            changeSaturationYellow(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
-                        }
-                    }
-                    function Lightness() {
-                        let incVal = document.getElementById("myRange2").value;
-                        let canvasIDs = ["canvas1", "canvas2", "canvas3"];
-                        for (let i = 0; i < canvasIDs.length; ++i) {
-
-                            changeLightness(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
-                        }
-                    }
-                </script>
             </div>
             <div class="row params_box" style="vertical-align: middle;">
                 <span style="font-size:x-large;width:100%">Стан Пікселя:</span>
                 </br>
-                <div id="output"></div>
-            </div>
-            <div class="row params_box" style="vertical-align: middle;">
-                <input type="number" id="canvAreaX" placeholder="X" min="0" max="1000"/>
-                <input type="number" id="canvAreaY" placeholder="Y" min="0" max="700"/>
-                <input type="number" id="canvAreaH" placeholder="W" min="0" max="700"/>
-                <input type="number" id="canvAreaW" placeholder="H" min="0" max="1000"/>
-
                 <div id="output"></div>
             </div>
             <div class="row botton_button_set">
@@ -164,58 +118,20 @@
                 <div class="row" style="margin-left: unset;margin-right:unset">
                     <div class="col-sm " style="padding:0;">
                         <div class="color_output_tab_btn" id="model_btn_1">
-                            <batton class="navbar-brand" onclick="gotoModel(1)">Зображення</batton>
+                            <batton class="navbar-brand" onclick="gotoModel(0)">Зображення</batton>
                         </div>
                     </div>
                     <div class="col-sm" style="padding:0;">
                         <div class="color_output_tab_btn_anactive" id="model_btn_2">
-                            <batton class="navbar-brand " onclick="gotoModel(2)">CMYK</batton>
+                            <batton class="navbar-brand " onclick="gotoModel(1)">CMYK</batton>
                         </div>
                     </div>
                     <div class="col-sm" style="padding:0;">
                         <div class="color_output_tab_btn_anactive" id="model_btn_3">
-                            <batton class="navbar-brand " onclick="gotoModel(3)">HLS</batton>
+                            <batton class="navbar-brand " onclick="gotoModel(2)">HLS</batton>
                         </div>
                     </div>
-                    <script>
-                        function gotoModel(numb) {
-                            switch (numb) {
-                                case 1:
-                                    document.getElementById("model_btn_1").className = "color_output_tab_btn";
-                                    document.getElementById("color_output_tab_1").style.display = "initial";
 
-                                    document.getElementById("model_btn_2").className = "color_output_tab_btn_anactive";
-                                    document.getElementById("color_output_tab_2").style.display = "none";
-                                    document.getElementById("model_btn_3").className = "color_output_tab_btn_anactive";
-                                    document.getElementById("color_output_tab_3").style.display = "none";
-
-                                    getPixelStatus(id("canvas1"));
-                                    break;
-                                case 2:
-                                    document.getElementById("model_btn_2").className = "color_output_tab_btn";
-                                    document.getElementById("color_output_tab_2").style.display = "initial";
-
-                                    document.getElementById("model_btn_1").className = "color_output_tab_btn_anactive";
-                                    document.getElementById("color_output_tab_1").style.display = "none";
-                                    document.getElementById("model_btn_3").className = "color_output_tab_btn_anactive";
-                                    document.getElementById("color_output_tab_3").style.display = "none";
-
-                                    getPixelStatus(id("canvas2"));
-                                    break;
-                                case 3:
-                                    document.getElementById("model_btn_3").className = "color_output_tab_btn";
-                                    document.getElementById("color_output_tab_3").style.display = "initial";
-
-                                    document.getElementById("model_btn_1").className = "color_output_tab_btn_anactive";
-                                    document.getElementById("color_output_tab_1").style.display = "none";
-                                    document.getElementById("model_btn_2").className = "color_output_tab_btn_anactive";
-                                    document.getElementById("color_output_tab_2").style.display = "none";
-
-                                    getPixelStatus(id("canvas3"));
-                                    break;
-                            }
-                        }
-                    </script>
                 </div>
 
                 <div class="color_output_tab" color_output_tab>

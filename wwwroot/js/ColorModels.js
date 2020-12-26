@@ -1,4 +1,87 @@
-﻿function cmykToRgb(C, M, Y, K) {
+﻿var CurrentCanvasNbr = 0;
+
+
+function ApplyChange() {
+    let deltaLight = document.getElementById("myRange2").value;
+    let deltaH = document.getElementById("myRange1").value;
+    let deltaY = document.getElementById("myRange4").value;
+    let deltaS = document.getElementById("myRange3").value;
+
+    let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+    for (let i = 0; i < canvasIDs.length; ++i) {
+
+        ApplyChangesToImage(document.getElementById(canvasIDs[i]), primatyColors[i], deltaY, deltaS, deltaLight, deltaH);
+    }
+
+}
+function Saturation() {
+    let incVal = document.getElementById("myRange3").value;
+    let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+    for (let i = 0; i < canvasIDs.length; ++i) {
+
+        changeSaturation(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
+    }
+}
+function SaturationYellow() {
+    let incVal = document.getElementById("myRange4").value;
+    let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+    for (let i = 0; i < canvasIDs.length; ++i) {
+        changeSaturationYellow(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
+    }
+}
+function Lightness() {
+    let incVal = document.getElementById("myRange2").value;
+    let canvasIDs = ["canvas1", "canvas2", "canvas3"];
+    for (let i = 0; i < canvasIDs.length; ++i) {
+
+        changeLightness(document.getElementById(canvasIDs[i]), incVal, primatyColors[i]);
+    }
+}
+
+function gotoModel(numb) {
+
+    CurrentCanvasNbr = numb;
+    switch (numb) {
+        case 0:
+            document.getElementById("model_btn_1").className = "color_output_tab_btn";
+            document.getElementById("color_output_tab_1").style.display = "initial";
+
+            document.getElementById("model_btn_2").className = "color_output_tab_btn_anactive";
+            document.getElementById("color_output_tab_2").style.display = "none";
+            document.getElementById("model_btn_3").className = "color_output_tab_btn_anactive";
+            document.getElementById("color_output_tab_3").style.display = "none";
+
+            getPixelStatus(id("canvas1"));
+            break;
+        case 1:
+            document.getElementById("model_btn_2").className = "color_output_tab_btn";
+            document.getElementById("color_output_tab_2").style.display = "initial";
+
+            document.getElementById("model_btn_1").className = "color_output_tab_btn_anactive";
+            document.getElementById("color_output_tab_1").style.display = "none";
+            document.getElementById("model_btn_3").className = "color_output_tab_btn_anactive";
+            document.getElementById("color_output_tab_3").style.display = "none";
+
+            getPixelStatus(id("canvas2"));
+            break;
+        case 2:
+            document.getElementById("model_btn_3").className = "color_output_tab_btn";
+            document.getElementById("color_output_tab_3").style.display = "initial";
+
+            document.getElementById("model_btn_1").className = "color_output_tab_btn_anactive";
+            document.getElementById("color_output_tab_1").style.display = "none";
+            document.getElementById("model_btn_2").className = "color_output_tab_btn_anactive";
+            document.getElementById("color_output_tab_2").style.display = "none";
+
+            getPixelStatus(id("canvas3"));
+            break;
+    }
+}
+
+
+
+
+function cmykToRgb(C, M, Y, K) {
     let r = 255 * (1 - C) * (1 - K);
     let g = 255 * (1 - M) * (1 - K);
     let b = 255 * (1 - Y) * (1 - K);
@@ -133,7 +216,77 @@ function ImageRGBToHSL(canvas) {
     ctx.putImageData(imageData, 0, 0);
 }
 
+function ApplyChangesToImage(canvas, origimageData, deltaYellow, deltaSaturation, deltaLight, deltaH) {
 
+    let ctx = canvas.getContext('2d');
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let red, green, blue;
+
+    console.log(canvasCoords);
+
+    SelectedArea.x = canvasCoords[parseInt(CurrentCanvasNbr)].Sx;
+    SelectedArea.y = canvasCoords[parseInt(CurrentCanvasNbr)].Sy;
+    SelectedArea.w = canvasCoords[parseInt(CurrentCanvasNbr)].Ex;
+    SelectedArea.h = canvasCoords[parseInt(CurrentCanvasNbr)].Ey;
+
+    if (SelectedArea.x === '' || SelectedArea.y === '' || SelectedArea.h === '' || SelectedArea.w === '' ||
+        (SelectedArea.x == 0 && SelectedArea.y == 0 && SelectedArea.h == 0 && SelectedArea.w == 0)) {
+
+        SelectedArea.x = parseInt(0);
+        SelectedArea.y = parseInt(0);
+        SelectedArea.h = parseInt(canvas.height);
+        SelectedArea.w = parseInt(canvas.width);
+    }
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+
+        let currX = (i / 4) % canvas.width;
+        let currY = ((i / 4) - currX) / canvas.width;
+
+        if ((parseInt(currX) >= parseInt(SelectedArea.x)) && (currX <= parseInt(SelectedArea.w))
+            && (parseInt(currY) >= parseInt(SelectedArea.y)) && (currY <= parseInt(SelectedArea.h))) {
+            red = origimageData.data[i];
+            green = origimageData.data[i + 1];
+            blue = origimageData.data[i + 2];
+
+            let cmyk = rgbToCmyk(red, green, blue);
+            let yellow = cmyk[2] * (1 + (deltaYellow / 100));
+            if (yellow < 0) {
+                yellow = 0;
+            }
+            if (yellow >= 100)
+                yellow = 100;
+
+            let newRgb = cmykToRgb(cmyk[0], cmyk[1], yellow, cmyk[3]);
+            imageData.data[i] = newRgb[0];
+            imageData.data[i + 1] = newRgb[1];
+            imageData.data[i + 2] = newRgb[2];
+
+            red = imageData.data[i];
+            green = imageData.data[i + 1];
+            blue = imageData.data[i + 2];
+
+            var hsv = RGBtoHSV([red, green, blue]);
+            hsv[2] *= 1 + (deltaLight / 100);
+            hsv[1] *= 1 + (deltaSaturation / 100);
+            //hsv[0] *= 1 + (deltaH / 100);
+            let dH = Math.abs((360 * deltaH / 100));
+            if (dH > 360)
+                hsv[0] += 360 - dH;
+            else
+                hsv[0] += dH;
+
+            newRgb = HSVtoRGB(hsv);
+
+
+            imageData.data[i] = newRgb[0];
+            imageData.data[i + 1] = newRgb[1];
+            imageData.data[i + 2] = newRgb[2];
+        }
+
+    }
+    ctx.putImageData(imageData, 0, 0);
+}
 
 
 
@@ -244,98 +397,7 @@ function changeSaturation(canvas, value, origimageData) {
 
     ctx.putImageData(imageData, 0, 0);
 }
-function ApplyChangesToImage(canvas, origimageData, deltaYellow, deltaSaturation, deltaLight, deltaH) {
 
-    let ctx = canvas.getContext('2d');
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let red, green, blue;
-    let cyan, magenta, black;
-
-    let start, end;
-
-
-    SelectedArea.x = document.getElementById("canvAreaX").value;
-    SelectedArea.y = document.getElementById("canvAreaY").value;
-    SelectedArea.h = document.getElementById("canvAreaH").value;
-    SelectedArea.w = document.getElementById("canvAreaW").value;
-    //if (SelectedArea.x === '' || SelectedArea.y === '' || SelectedArea.h === '' || SelectedArea.w === '' ||
-    // (SelectedArea.x == 0 && SelectedArea.y == 0 && SelectedArea.h == 0 && SelectedArea.w == 0)) {
-
-    //    start = 0;
-    //    end = imageData.data.length;
-    //}
-    //else {
-    //    console.log('canv WIDTH = '+ canvas.width )
-    //    start = ((SelectedArea.y * canvas.width) + SelectedArea.x) * 4;
-    //    end = (((SelectedArea.h - SelectedArea.y) * canvas.width) + (SelectedArea.w - SelectedArea.x)) * 4;
-    //    //end = ((SelectedArea.y + SelectedArea.h) * canvas.width + (SelectedArea.x + SelectedArea.w)) * 4;
-    //}
-    if (SelectedArea.x === '' || SelectedArea.y === '' || SelectedArea.h === '' || SelectedArea.w === '' ||
-     (SelectedArea.x == 0 && SelectedArea.y == 0 && SelectedArea.h == 0 && SelectedArea.w == 0)) {
-
-        SelectedArea.x = parseInt(0);
-        SelectedArea.y = parseInt(0);
-        SelectedArea.h = parseInt(canvas.height);
-        SelectedArea.w = parseInt(canvas.width);
-    }
-    if (SelectedArea.h > canvas.height ) {
-        SelectedArea.h = canvas.height
-    }
-    if (SelectedArea.w > canvas.width) {
-        SelectedArea.w = canvas.width
-    }
-
-    for (let i = 0; i < imageData.data.length; i += 4) {
-
-        let currX = (i / 4) % canvas.width;
-        let currY = ((i / 4) - currX) / canvas.width;
-
-
-        if ((parseInt(currX) >= parseInt(SelectedArea.x)) && (currX <= (parseInt(SelectedArea.x) + parseInt( SelectedArea.w)))
-            && (parseInt(currY) >= parseInt(SelectedArea.y)) && (currY <= (parseInt(SelectedArea.y) + parseInt(SelectedArea.h))) )
-        {
-            red = origimageData.data[i];
-            green = origimageData.data[i + 1];
-            blue = origimageData.data[i + 2];
-
-            let cmyk = rgbToCmyk(red, green, blue);
-            let yellow = cmyk[2] * (1 + (deltaYellow / 100));
-            if (yellow < 0) {
-                yellow = 0;
-            }
-            if (yellow >= 100)
-                yellow = 100;
-
-            let newRgb = cmykToRgb(cmyk[0], cmyk[1], yellow, cmyk[3]);
-            imageData.data[i] = newRgb[0];
-            imageData.data[i + 1] = newRgb[1];
-            imageData.data[i + 2] = newRgb[2];
-
-            red = imageData.data[i];
-            green = imageData.data[i + 1];
-            blue = imageData.data[i + 2];
-
-            var hsv = RGBtoHSV([red, green, blue]);
-            hsv[2] *= 1 + (deltaLight / 100);
-            hsv[1] *= 1 + (deltaSaturation / 100);
-            //hsv[0] *= 1 + (deltaH / 100);
-            let dH = Math.abs((360 * deltaH / 100));
-            if (dH > 360)
-                hsv[0] += 360 - dH;
-            else
-                hsv[0] += dH;
-
-            newRgb = HSVtoRGB(hsv);
-
-
-            imageData.data[i] = newRgb[0];
-            imageData.data[i + 1] = newRgb[1];
-            imageData.data[i + 2] = newRgb[2];   
-        }
-        
-    }
-    ctx.putImageData(imageData, 0, 0);
-}
 function changeLightness(canvas, value, origimageData) {
     let ctx = canvas.getContext('2d');
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

@@ -125,7 +125,16 @@ select {
     margin-right: unset;
     width: 100%;
 }
-
+.button_set {
+    display:inline-grid;
+    padding: 2vmin;
+    margin: 1vmin;
+    right: 0;
+    bottom: 0;
+    margin-left: unset;
+    margin-right: unset;
+    width: 100%;
+}
 .action_btn {
     border: 2px solid #FF661F;
     box-sizing: border-box;
@@ -157,6 +166,16 @@ select {
     padding: 0;
     margin: 0;
     margin-right: 2vmin;
+    text-align: center;
+}
+.action_icon_pair {
+    float: right;
+    height: 4vmin;
+    width: 4vmin;
+    padding: 0;
+    margin: 0;
+    margin-right: 2vmin;
+    margin-left: 2vmin;
     text-align: center;
 }
 .action_icon:hover{
@@ -323,3 +342,56 @@ select {
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
+.move_output {
+    background: #FFFFFF;
+    border: 6px solid #588B8B;
+    box-sizing: border-box;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 31px;
+}
+
+.move_action_btn {
+    background: #D27360;
+    border: 1px solid #918B8B;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 13px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 42px;
+    text-align: center;
+    color: #FFFFFF;
+    margin-bottom: 1vmin;
+
+    text-align: center;
+    width: 100%;
+    height: auto;
+    padding: 1vmin;
+}
+
+body row {
+    margin-left: unset;
+    margin-right: unset;
+}
+
+.move_figure_param_input{
+    width:10vmin;
+}
+.move_figure_label_input {
+    width: 6vmin;
+    border: 0;
+}
+.arrow {
+    background: #BF4D36;
+    border: 1px solid #918B8B;
+    box-sizing: border-box;
+    border-radius: 13px;
+    padding: 0.5vmin;
+    margin: 0.2vmin;
+    color: white;
+}
+.arrow_set {
+    
+}
