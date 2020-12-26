@@ -1,24 +1,29 @@
 ﻿document.getElementById("inputLinePointK").value = 1;
 document.getElementById("inputLinePointB").value = 0;
 
-document.getElementById("inputPointAx").value = -10;
-document.getElementById("inputPointAy").value = 0;
+document.getElementById("inputPointAx").value = -5;
+document.getElementById("inputPointAy").value = -15;
 
-document.getElementById("inputPointBx").value = -5;
-document.getElementById("inputPointBy").value = 10;
+document.getElementById("inputPointBx").value = 0;
+document.getElementById("inputPointBy").value = 5;
 
-document.getElementById("inputPointCx").value = -2;
-document.getElementById("inputPointCy").value = 9;
+document.getElementById("inputPointCx").value = 5;
+document.getElementById("inputPointCy").value = 2;
 
 var Parallelogram = {
     A: { x: 0, y: 0 },
     B: { x: 0, y: 0 },
-    C: { x: 0, y: 0 }
+    C: { x: 0, y: 0 },
+    mathA: { x: 0, y: 0 },
+    mathB: { x: 0, y: 0 },
+    mathC: { x: 0, y: 0 },
 }
 
 var Priama = {
     K: 0,
-    B: 0
+    canvK:0,
+    mathB: 0,
+    canvB: 0
 }
 
 var CanvasConfig = { BaseImage: new Image() };
@@ -63,8 +68,17 @@ function BuildParallelogram() {
     Parallelogram.C.x = C[0];
     Parallelogram.C.y = C[1];
 
+    Parallelogram.mathA.x = ax;
+    Parallelogram.mathA.y = ay;
+    Parallelogram.mathB.x = bx;
+    Parallelogram.mathB.y = by;
+    Parallelogram.mathC.x = cx;
+    Parallelogram.mathC.y = cy;
+
     Priama.K = LineK;
+    Priama.canvK = -1 * LineK;
     Priama.B = LineB;
+    Priama.canvB = (canvasCenterX + (LineB * canvasScale));
 
     ClearCoordCanvas();
     drawPriama_XD(canvas, LineK, LineB);
@@ -133,68 +147,88 @@ function MultMatrix(Matrix1, Matrix2) {
     return resMatrix;
 }
 
+var movePoints = 1;
 function MoveParallUp() {
-    MoveParall(0, -canvasScale);
+    MoveParall(movePoints, 0 );
 }
 function MoveParallDown() {
-    MoveParall(0, canvasScale);
+    MoveParall(-movePoints, 0);
 }
 function MoveParallLeft() {
-    MoveParall(-canvasScale, 0);
+    MoveParall(0, -movePoints);
 }
 function MoveParallRight() {
-    MoveParall(canvasScale, 0);
+    MoveParall(0, movePoints);
 }
 function MoveParall(deltax, deltay) {
 
     let canvas = document.getElementById("MoveCanvas");
 
-    let PointA = [Parallelogram.A.x, Parallelogram.A.y];
-    let PointB = [Parallelogram.B.x, Parallelogram.B.y];
-    let PointC = [Parallelogram.C.x, Parallelogram.C.y];
+    let PointA = [Parallelogram.mathA.x, Parallelogram.mathA.y];
+    let PointB = [Parallelogram.mathB.x, Parallelogram.mathB.y];
+    let PointC = [Parallelogram.mathC.x, Parallelogram.mathC.y];
 
     PointA = MovePoint(PointA, deltax, deltay);
     PointB = MovePoint(PointB, deltax, deltay);
     PointC = MovePoint(PointC, deltax, deltay);
 
-    console.log(PointA);
+    Parallelogram.mathA.x = PointA[0];
+    Parallelogram.mathA.y = PointA[1];
 
-    Parallelogram.A.x = PointA[0];
-    Parallelogram.A.y = PointA[1];
+    Parallelogram.mathB.x = PointB[0];
+    Parallelogram.mathB.y = PointB[1];
 
-    Parallelogram.B.x = PointB[0];
-    Parallelogram.B.y = PointB[1];
+    Parallelogram.mathC.x = PointC[0];
+    Parallelogram.mathC.y = PointC[1];
 
-    Parallelogram.C.x = PointC[0];
-    Parallelogram.C.y = PointC[1];
+    let canvA = new MathDot(Parallelogram.mathA.x, Parallelogram.mathA.y).getInCanvasDot();
+    let canvB = new MathDot(Parallelogram.mathB.x, Parallelogram.mathB.y).getInCanvasDot();
+    let canvC = new MathDot(Parallelogram.mathC.x, Parallelogram.mathC.y).getInCanvasDot();
+
+    let A = [];
+    let B = [];
+    let C = [];
+
+    A[0] = canvA.x;
+    A[1] = canvA.y;
+
+    B[0] = canvB.x;
+    B[1] = canvB.y;
+
+    C[0] = canvC.x;
+    C[1] = canvC.y;
 
     ClearCoordCanvas();
     drawPriama_XD(canvas, Priama.K, Priama.B);
-    drawParallelogram(canvas, PointA, PointB, PointC);
+    drawParallelogram(canvas, A, B, C);
     MirrorParall();
 }
 
 function MovePoint(Point, deltax, deltay) {
-    let pointMtrx = new Array(3);
-    pointMtrx[0] = [[Point[0]]];
-    pointMtrx[1] = [[Point[1]]];
-    pointMtrx[2] = [[1]]; 
     let transMatrix = [[1, 0, deltax], [0, 1, deltay], [0, 0, 1]];
-    let newCoord = MultMatrix(transMatrix, pointMtrx);
-
-    return [newCoord[0][0], newCoord[1][0]];
+    return ApplyAfin(Point, transMatrix)
 }
 function MirrorParall() {
     let canvas = document.getElementById("MoveCanvas");
 
-    let PointA = [Parallelogram.A.x, Parallelogram.A.y];
-    let PointB = [Parallelogram.B.x, Parallelogram.B.y];
-    let PointC = [Parallelogram.C.x, Parallelogram.C.y];
+    let PointA = [Parallelogram.mathA.x, Parallelogram.mathA.y];
+    let PointB = [Parallelogram.mathB.x, Parallelogram.mathB.y];
+    let PointC = [Parallelogram.mathC.x, Parallelogram.mathC.y];
 
     PointA = MirrorPoint(PointA, Priama.K, Priama.B);
     PointB = MirrorPoint(PointB, Priama.K, Priama.B);
     PointC = MirrorPoint(PointC, Priama.K, Priama.B);
 
+    let canvA = new MathDot(PointA[0], PointA[1]).getInCanvasDot();
+    let canvB = new MathDot(PointB[0], PointB[1]).getInCanvasDot();
+    let canvC = new MathDot(PointC[0], PointC[1]).getInCanvasDot();
+
+    PointA[0] = canvA.x;
+    PointB[0] = canvB.x;
+    PointC[0] = canvC.x;
+    PointA[1] = canvA.y;
+    PointB[1] = canvB.y;
+    PointC[1] = canvC.y;
     drawParallelogram(canvas, PointA, PointB, PointC);
 }
 function MirrorPoint(Point, k, b) {
