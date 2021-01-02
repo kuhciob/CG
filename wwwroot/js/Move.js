@@ -1,14 +1,14 @@
 ﻿document.getElementById("inputLinePointK").value = 1;
 document.getElementById("inputLinePointB").value = 0;
 
-document.getElementById("inputPointAx").value = -5;
-document.getElementById("inputPointAy").value = -15;
+document.getElementById("inputPointAx").value = -15;
+document.getElementById("inputPointAy").value = 2;
 
-document.getElementById("inputPointBx").value = 0;
-document.getElementById("inputPointBy").value = 5;
+document.getElementById("inputPointBx").value = -11;
+document.getElementById("inputPointBy").value = 12;
 
-document.getElementById("inputPointCx").value = 5;
-document.getElementById("inputPointCy").value = 2;
+document.getElementById("inputPointCx").value = 3;
+document.getElementById("inputPointCy").value = 15;
 
 var Parallelogram = {
     A: { x: 0, y: 0 },
@@ -86,11 +86,13 @@ function BuildParallelogram() {
     drawParallelogram(canvas, A, B, C); 
     MirrorParall();
 }
-function drawParallelogram(canvas, A, B, C) {
+
+
+function drawParallelogram(canvas, A, B, C,isMirrored = false) {
    
     context = canvas.getContext("2d");
     context.beginPath();
-
+ 
     context.moveTo(A[0], A[1])
     context.lineTo(B[0], B[1]);
     context.lineTo(C[0], C[1]);
@@ -98,8 +100,24 @@ function drawParallelogram(canvas, A, B, C) {
     let ACcentrX = (A[0] + C[0]) / 2.0; 
     let ACcentrY = (A[1] + C[1]) / 2.0; 
 
+    let D = [2 * ACcentrX - B[0], 2 * ACcentrY - B[1]];
+    context.lineTo(D[0],D[1]);
 
-    context.lineTo(2 * ACcentrX - B[0], 2 * ACcentrY - B[1]);
+    ctx.font = "20px Consolas";
+    ctx.fillStyle = "red";
+
+    if (isMirrored) {
+        context.fillText("A'", A[0], A[1]);
+        context.fillText("B'", B[0], B[1]);
+        context.fillText("C'", C[0], C[1]);
+        context.fillText("D'", D[0], D[1]);
+    }
+    else {
+        context.fillText("A", A[0], A[1]);
+        context.fillText("B", B[0], B[1]);
+        context.fillText("C", C[0], C[1]);
+        context.fillText("D", D[0], D[1]);
+    }
 
     context.lineTo(A[0], A[1])
 
@@ -149,16 +167,16 @@ function MultMatrix(Matrix1, Matrix2) {
 
 var movePoints = 1;
 function MoveParallUp() {
-    MoveParall(movePoints, 0 );
+    MoveParall(0, movePoints );
 }
 function MoveParallDown() {
-    MoveParall(-movePoints, 0);
-}
-function MoveParallLeft() {
     MoveParall(0, -movePoints);
 }
+function MoveParallLeft() {
+    MoveParall(-movePoints, 0);
+}
 function MoveParallRight() {
-    MoveParall(0, movePoints);
+    MoveParall(movePoints, 0);
 }
 function MoveParall(deltax, deltay) {
 
@@ -229,24 +247,24 @@ function MirrorParall() {
     PointA[1] = canvA.y;
     PointB[1] = canvB.y;
     PointC[1] = canvC.y;
-    drawParallelogram(canvas, PointA, PointB, PointC);
+    drawParallelogram(canvas, PointA, PointB, PointC,true);
 }
 function MirrorPoint(Point, k, b) {
 
      return ApplyAfin(Point,GetMirrorMatrix(k, b));
 }
 function GetMirrorMatrix(k, b) {
-    let atg = -1 * Math.atan(k);
+    let atg = 1 * Math.atan(k);
 
     let matrix1 = [
         [1, 0, 0],
-        [0, 1, 0],
-        [0, b * (-1), 1]
+        [0, 1, b ],
+        [0, 0, 1]
     ]
 
     let matrix2 = [
-        [Math.cos(atg), Math.sin(atg), 0],
-        [-1 * Math.sin(atg), Math.cos(atg), 0],
+        [Math.cos(atg), -1 * Math.sin(atg), 0],
+        [Math.sin(atg), Math.cos(atg), 0],
         [0, 0, 1]
     ]
 
@@ -258,15 +276,15 @@ function GetMirrorMatrix(k, b) {
 
 
     let matrix4 = [
-        [Math.cos(atg), -1 * Math.sin(atg), 0],
-        [Math.sin(atg), Math.cos(atg), 0],
+        [Math.cos(atg),  Math.sin(atg), 0],
+        [-1 * Math.sin(atg), Math.cos(atg), 0],
         [0, 0, 1]
     ]
 
     let matrix5 = [
         [1, 0, 0],
-        [0, 1, 0],
-        [0, b, 1]
+        [0, 1, -1 * b],
+        [0, 0, 1]
     ]
 
     let triangleMatrix = [
@@ -275,15 +293,14 @@ function GetMirrorMatrix(k, b) {
         [2, 6, 1]
     ]
 
-
     let matrix12 = MultMatrix(matrix1, matrix2);
     let matrix123 = MultMatrix(matrix12, matrix3);
     let matrix1234 = MultMatrix(matrix123, matrix4);
     let TranspontMatrix = MultMatrix(matrix1234, matrix5)
-    let finalMatrix = MultMatrix(triangleMatrix, TranspontMatrix)
 
     return TranspontMatrix;
 }
+
 function ApplyAfin(Point, AfinMatrix) {
     let pointMtrx = new Array(3);
     pointMtrx[0] = [[Point[0]]];
@@ -293,7 +310,6 @@ function ApplyAfin(Point, AfinMatrix) {
 
     return [newCoord[0][0], newCoord[1][0]];
 }
-
 
 const multiplyMatrices = (a, b) => {
     if (!Array.isArray(a) || !Array.isArray(b) || !a.length || !b.length) {

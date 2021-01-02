@@ -12,7 +12,7 @@ namespace CGlab.Controllers
         // GET: MoveController
         public ActionResult Index()
         {
-            return View();
+            return View(new CGlab.Models.Move.Move());
         }
 
         // GET: MoveController/Details/5

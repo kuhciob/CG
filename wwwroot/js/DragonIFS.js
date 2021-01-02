@@ -5,7 +5,6 @@
 
     var c = c1 = c2 = c2x = c2y = x = y = 0, d = 1, step = 1 << step;
 
-    console.log(step)
     ox = Number(ox);
     oy = Number(oy);
     x = y = layer.canvas.width / 2;

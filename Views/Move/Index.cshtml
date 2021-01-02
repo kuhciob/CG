@@ -1,4 +1,5 @@
-﻿@{
+﻿@model CGlab.Models.Move.Move
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -8,7 +9,10 @@
     <div class="row" style="margin-left: unset;margin-right:unset; ">
         <div class="col-4">
         </div>
-        <div class="col-8">
+        <div class="col-8 d-flex flex-row-reverse">
+            <button class="tip" onclick="">@Model.TipAffine<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+            <button class="tip" onclick="">Як будується паралелограм?<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+
         </div>
     </div>
 
@@ -16,12 +20,12 @@
         <div class="col-4">
             
  
-            <div class="button_set">
+            <div class="button_set" style="margin-top:0;padding-top:0;">
                 <div style="text-align:center">
                     <h3>Точки паралелограма:</h3>
                 </div>
                 <div class="">
-                    <fieldset class="border p-4" style="border: 3px solid #9F422D;">
+                    <fieldset class="border p-2" style="border: 3px solid #9F422D;">
                         <legend style="text-align:start; width:auto">A</legend>
                         <div class="row">
                             <div class="col">
@@ -34,7 +38,7 @@
                     </fieldset>
                 </div>
                 <div class="">
-                    <fieldset class="border p-4" style="border: 3px solid #9F422D;">
+                    <fieldset class="border p-2" style="border: 3px solid #9F422D;">
                         <legend style="text-align:start; width:auto">B</legend>
                         <div class="row">
                             <div class="col">
@@ -47,7 +51,7 @@
                     </fieldset>
                 </div>
                 <div class="">
-                    <fieldset class="border p-4" style="border: 3px solid #9F422D;">
+                    <fieldset class="border p-2" style="border: 3px solid #9F422D;">
                         <legend style="text-align:start; width:auto">C</legend>
                         <div class="row">
                             <div class="col">
@@ -62,29 +66,46 @@
 
 
                 <div class="" style="padding:3vmin">
-                    <div style="text-align:center">
-                        <h4>Рівняння прямої:</h4>
-                    </div>
-                    <div class="row">
-                        <div class="">
-                            <h4 class="form-control move_figure_label_input">Y =</h4>
+                    <fieldset class="border p-2" style="border: 3px solid #9F422D;">
+                        <legend style="text-align:center; width:auto">Рівняння прямої:</legend>
+                        <div class="row">
+                            <div class="">
+                                <h4 class="form-control move_figure_label_input">Y =</h4>
+                            </div>
+                            <div class="">
+                                <input type="number" class="form-control move_figure_param_input" id="inputLinePointK" placeholder="K">
+                            </div>
+                            <div class="">
+                                <h4 class="form-control move_figure_label_input"> X +</h4>
+                            </div>
+                            <div class="">
+                                <input type="number" class="form-control move_figure_param_input" id="inputLinePointB" placeholder="B">
+                            </div>
                         </div>
-                        <div class="">
-                            <input type="number" class="form-control move_figure_param_input" id="inputLinePointK" placeholder="K">
-                        </div>
-                        <div class="">
-                            <h4 class="form-control move_figure_label_input"> X +</h4>
-                        </div>
-                        <div class="">
-                            <input type="number" class="form-control move_figure_param_input" id="inputLinePointB" placeholder="B">
-                        </div>
-                    </div>
+                    </fieldset>
                 </div>
 
                 <button class="move_action_btn " onclick="BuildParallelogram()">Побудувати<span class="iconify action_icon" data-inline="false" data-icon="mdi-light:fast-forward"></span></button>
                 <button class="move_action_btn " onclick="ClearCoordCanvas()">Очистити</button>
 
-                
+                <div class="arrow_set">
+                    <div class="row d-flex justify-content-center">
+                        <button class="arrow" onclick="MoveParallUp()">
+                            <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-up"></span>
+                        </button>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <button class="arrow" onclick="MoveParallLeft()">
+                            <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-left"></span>
+                        </button>
+                        <button class="arrow" onclick="MoveParallDown()">
+                            <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-down"></span>
+                        </button>
+                        <button class="arrow" onclick="MoveParallRight()">
+                            <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-right"></span>
+                        </button>
+                    </div>
+                </div>
 
 
 
@@ -95,24 +116,7 @@
             <div>
                 <canvas class="move_output" id="MoveCanvas" width="1080" height="720"></canvas>
             </div>
-            <div class="arrow_set">
-                <div class="row d-flex justify-content-center">
-                    <button class="arrow" onclick="MoveParallUp()">
-                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-up"></span>
-                    </button>
-                </div>
-                <div class="row d-flex justify-content-center">
-                    <button class="arrow" onclick="MoveParallLeft()">
-                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-left"></span>
-                    </button>
-                    <button class="arrow" onclick="MoveParallDown()">
-                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-down"></span>
-                    </button>
-                    <button class="arrow" onclick="MoveParallRight()">
-                        <span class="iconify action_icon_pair" data-inline="false" data-icon="mdi-light:arrow-right"></span>
-                    </button>
-                </div>
-            </div>
+            
         </div>
 
 

@@ -12,7 +12,7 @@
 		layer.beginPath();
 		var w = layer.canvas.width;
 		var h = layer.canvas.height;
-		console.log(fractType);
+
 		switch (fractType) {
 			case "Лінія коха(геометричний)":
 				kochGeom([10, h / 2, 90], w - 20, step, layer);

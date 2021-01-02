@@ -1,5 +1,5 @@
 ﻿var CurrentCanvasNbr = 0;
-
+var currentCanvas = document.getElementById("canvas1")
 
 function ApplyChange() {
     let deltaLight = document.getElementById("myRange2").value;
@@ -76,6 +76,7 @@ function gotoModel(numb) {
             getPixelStatus(id("canvas3"));
             break;
     }
+    currentCanvas = document.getElementById("canvas" + (CurrentCanvasNbr+1))
 }
 
 
@@ -222,7 +223,6 @@ function ApplyChangesToImage(canvas, origimageData, deltaYellow, deltaSaturation
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let red, green, blue;
 
-    console.log(canvasCoords);
 
     SelectedArea.x = canvasCoords[parseInt(CurrentCanvasNbr)].Sx;
     SelectedArea.y = canvasCoords[parseInt(CurrentCanvasNbr)].Sy;

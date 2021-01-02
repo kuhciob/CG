@@ -6,10 +6,22 @@
 
 <div class="text-center" style="height:-webkit-fill-available">
     <div class="row" style="margin-left: unset;margin-right:unset; ">
+
         <div class="row input-group" style="margin-left: unset;margin-right:unset">
-            <span class="input-group-addon input-search-custom-adon selector_label">Тип Фракталу: </span>
-            @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
+            <div class="col-4">
+                <div class="row" style="width: -webkit-fill-available;">
+                    @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
+                </div>
+                
+            </div>
+            <div class="col-8 d-flex flex-row-reverse">
+                <button class="tip" onclick="">Що таке фрактали?<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+
+            </div>
+            
         </div>
+
+
     </div>
     <div class="row" style="margin-left: unset;margin-right:unset;height: -webkit-fill-available; padding-bottom: 10vmin; margin-top: 2vmin;">
         <div class="col-4">
@@ -32,20 +44,13 @@
                             @Html.TextBoxFor(m => m.Speed, new { @class = "frac_params_input" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="selector_label">Колір: </span>
-                        </div>
-                        <div class="col">
-                            @Html.DropDownListFor(m => m.Colors, new SelectList(Model.Colors), new { @class = "frac_params_input" })
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <div class="row botton_button_set">
                 <button class="action_btn " style="margin-bottom:2vmin;" onclick="buildFract()">Побудувати <span class="iconify action_icon" data-inline="false" data-icon="mdi-light:play"></span></button>
 
-                <button class="action_btn " onclick="">Зберегти <span class="iconify action_icon" data-inline="false" data-icon="mdi-light:content-save"></span></button>
+                <a download="Image.png" href="" class="action_btn " onclick="SaveFromCanvas(this,document.getElementById('layer'))">Зберегти <span class="iconify action_icon" data-inline="false" data-icon="mdi-light:content-save"></span></a>
                 <script>
                     function buildFract() {
                         let iterations = document.getElementById("IterationCount").value;

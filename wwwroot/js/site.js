@@ -3,3 +3,9 @@
 
 // Write your JavaScript code.
 
+function SaveFromCanvas(downloadBtn, canvas) {
+    console.log(canvas);
+    var img = canvas.toDataURL("image/png");
+    downloadBtn.href = img;
+}
+

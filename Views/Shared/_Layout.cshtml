@@ -11,21 +11,33 @@
     <header>
         <nav>
             <div class="row" style="margin-left: unset;margin-right:unset">
-                <div class="col-sm navitem">
+                <div id="HomePage" class="col-sm navitem">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Головна сторінка</a>
                 </div>
-                <div class="col-sm navitem">
+                <div id="FractalsPage" class="col-sm navitem">
                     <a class="navbar-brand" asp-area="" asp-controller="Fractals" asp-action="Index">Фрактали</a>
                 </div>
-                <div class="col-sm navitem">
+                <div id="ColorsSystemsPage" class="col-sm navitem">
                     <a class="navbar-brand" asp-area="" asp-controller="ColorsSystems" asp-action="ColorModel1">Кольорні моделі</a>
                 </div>
-                <div class="col-sm navitem">
+                <div id="MovePage" class="col-sm navitem">
                     <a class="navbar-brand" asp-area="" asp-controller="Move" asp-action="Index">Перетворення</a>
                 </div>
             </div>
+
             <script>
 
+            </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () { // Аналог $(document).ready(function(){
+                    let controllerName = '@ViewContext.RouteData.Values["controller"].ToString()';
+
+                    let items = document.getElementsByClassName('navitem');
+                    for (let i = 0; i < items.length; ++i) {
+                        items[i].classList.replace("navitem_active","navitem")
+                    }
+                    document.getElementById(controllerName + "Page").classList.replace("navitem", "navitem_active")
+                });
             </script>
         </nav>
     </header>
