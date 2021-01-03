@@ -52,6 +52,7 @@ namespace CGlab
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            Models.Tips.wwwRootPath = env.WebRootPath;
         }
     }
 }

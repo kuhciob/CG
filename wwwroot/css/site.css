@@ -418,3 +418,34 @@ body row {
     margin: 0;
     text-align: center;
 }
+.tipbox {
+    position: absolute;
+    background: white;
+    width: 50vmin;
+    height: 40vmin;
+    top: 1%;
+    left: 73%;
+    border-radius: 13px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #D27360;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.tipbox_close_btn {
+    color: #FF661F;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    transform: rotate(45deg);
+}
+.tipbox_close_icon {
+    color: #FF661F;
+    height: 100%;
+    width: 100%;
+}
+
+

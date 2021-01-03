@@ -33,7 +33,7 @@
                             <span class="selector_label">К-кість ітерацій: </span>
                         </div>
                         <div class="col">
-                            @Html.TextBoxFor(m => m.IterationCount, new { @class = "frac_params_input" })
+                            <input id="IterationCount" type="number" min="0" step="1" class="frac_params_input" pattern="^[0-9]+$"/>
                         </div>
                     </div>
                     <div class="row">
@@ -41,7 +41,7 @@
                             <span class="selector_label">Швидкість: </span>
                         </div>
                         <div class="col">
-                            @Html.TextBoxFor(m => m.Speed, new { @class = "frac_params_input" })
+                            <input id ="Speed" type="number" min="0" step="1" class="frac_params_input" pattern="^[0-9]+$"/>
                         </div>
                     </div>
                     
