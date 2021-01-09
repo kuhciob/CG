@@ -108,7 +108,7 @@ select {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 .fractal_output {
-    height: 95%;
+    
     margin: 1vmin;
     background: #FFFFFF;
     border: 3px solid #9F422D;
@@ -147,8 +147,6 @@ select {
     height: auto;
     padding: 1vmin;
 
-    
-    line-height: 42px;
 
     font-style: normal;
     font-size: x-large;
@@ -363,7 +361,6 @@ select {
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
-    line-height: 42px;
     text-align: center;
     color: #FFFFFF;
     margin-bottom: 1vmin;
@@ -423,8 +420,8 @@ body row {
     background: white;
     width: 50vmin;
     height: 40vmin;
-    top: 1%;
-    left: 73%;
+    top: 7%;
+    left: 72%;
     border-radius: 13px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -448,4 +445,37 @@ body row {
     width: 100%;
 }
 
+.video_tip {
+    background: white;
+    border: 1px solid #FF0000;
+    box-sizing: border-box;
+    border-radius: 31px;
+    padding: 1vmin;
+    font-size: large;
+    margin-left: 1vmin;
+    margin-right: 1vmin;
+}
 
+.viceo_tips_icon {
+    color: #CD0000;
+    float: right;
+    height: 2.5vmin;
+    width: 2.5vmin;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+.video_tipbox {
+    position: absolute;
+    background: #588B8B;
+    width: 1080px;
+    height: 720px;
+    top: 15%;
+    left: 23%;
+    border-radius: 13px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #D27360;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}

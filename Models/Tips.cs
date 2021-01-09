@@ -54,5 +54,62 @@ namespace CGlab.Models
             }
         }
         #endregion
+
+        #region VideoTipFractal
+        static public string VideoTipFractal
+        {
+            get
+            {
+                return "https://www.youtube.com/embed/DYxzjHdkNR4";
+            }
+        }
+        #endregion
+        #region VideoTipFractal
+        static public string VideoTipColor
+        {
+            get
+            {
+                return "https://www.youtube.com/embed/tC87TaqE4LA";
+            }
+        }
+        #endregion
+        #region What is Fractal
+        static public string WhatIsFractalVideo
+        {
+            get
+            {
+                return "https://www.youtube.com/embed/tC87TaqE4LA";
+            }
+        }
+        #endregion
+        #region VideoTipFractal
+        static public string VideoTipAfin
+        {
+            get
+            {
+                return "https://www.youtube.com/embed/DYxzjHdkNR4";
+            }
+        }
+        #endregion
+
+
+        #region affin
+        static private string _whatIsAFFIN;
+        static public string WhatIsAFFIN
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_whatIsCMYK))
+                {
+                    string testContent = File.ReadAllText($"{wwwRootPath}/tips/AfinTransformTip.txt");
+                    //_whatIsAFFIN = HttpUtility.JavaScriptStringEncode(testContent);
+                    _whatIsAFFIN = HttpUtility.JavaScriptStringEncode(testContent);
+
+                }
+                return _whatIsAFFIN;
+            }
+        }
+        #endregion
+        //https://www.youtube.com/embed/DYxzjHdkNR4
     }
 }

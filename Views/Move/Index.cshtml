@@ -10,8 +10,8 @@
         <div class="col-4">
         </div>
         <div class="col-8 d-flex flex-row-reverse">
-            <button class="tip" onclick="">@Model.TipAffine<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
-            <button class="tip" onclick="">Як будується паралелограм?<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+            <button class="tip" onclick="GetAffinTips()"  >Що таке афінні перетворення?<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+            <button class="video_tip" onclick="GetVideoTips('@Html.Raw(CGlab.Models.Tips.VideoTipAfin)')">Відео довідка<span class="iconify viceo_tips_icon" data-inline="false" data-icon="mdi-light:presentation-play"></span></button>
 
         </div>
     </div>
@@ -63,7 +63,35 @@
                         </div>
                     </fieldset>
                 </div>
+                <div class="">
+                    <button class="move_action_btn" onclick="FillParalrllPoints()" style="padding: 0;font-size: small; background:#BF4D36;width:40%" >Згенерувати</button>
+                    <script>
+                        var ParallFillPointIndx = 0;
+                        var ParallFillPoints = [{ Ax: -15, Ay: 2, Bx: -11, By: 12, Cx: 3, Cy: 15 },
+                            { Ax: 5, Ay: -10, Bx: 15, By: 2, Cx: 5, Cy: 0 },
+                            { Ax: 5, Ay: 10, Bx: 15, By: 2, Cx: 5, Cy: 0 },
+                            { Ax: -5, Ay: -10, Bx: -10, By: -2, Cx: -18, Cy: -1 }];
+                        function FillParalrllPoints() {
+                            let currPoint = ParallFillPoints[ParallFillPointIndx];
 
+                            document.getElementById("inputPointAx").value = currPoint.Ax;
+                            document.getElementById("inputPointAy").value = currPoint.Ay;
+
+                            document.getElementById("inputPointBx").value = currPoint.Bx;
+                            document.getElementById("inputPointBy").value = currPoint.By;
+
+                            document.getElementById("inputPointCx").value = currPoint.Cx;
+                            document.getElementById("inputPointCy").value = currPoint.Cy;
+
+                            ParallFillPointIndx++;
+                            console.log(ParallFillPoints.length + ": indx ="+ ParallFillPointIndx);
+
+
+                            if (ParallFillPointIndx >= ParallFillPoints.length)
+                                ParallFillPointIndx = 0;
+                        }
+                    </script>
+                </div>
 
                 <div class="" style="padding:3vmin">
                     <fieldset class="border p-2" style="border: 3px solid #9F422D;">

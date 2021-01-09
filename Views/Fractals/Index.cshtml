@@ -15,7 +15,8 @@
                 
             </div>
             <div class="col-8 d-flex flex-row-reverse">
-                <button class="tip" onclick="">Що таке фрактали?<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+                <button class="tip" onclick="GetVideoTips('@Html.Raw(CGlab.Models.Tips.WhatIsFractalVideo)')">Що таке фрактали?<span class="iconify tips_icon" data-inline="false" data-icon="mdi-light:lightbulb"></span></button>
+                <button class="video_tip" onclick="GetVideoTips('@Html.Raw(CGlab.Models.Tips.VideoTipFractal)')">Відео довідка<span class="iconify viceo_tips_icon" data-inline="false" data-icon="mdi-light:presentation-play"></span></button>
 
             </div>
             
@@ -62,7 +63,7 @@
             </div>
         </div>
         <div class="col-8">
-            <div class="fractal_output">
+            <div class="fractal_output" style="height: 95%;">
                 <canvas id="layer" width="1000" height="760"></canvas>
                 <script>
                                     //draw();

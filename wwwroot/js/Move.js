@@ -1,14 +1,4 @@
-﻿document.getElementById("inputLinePointK").value = 1;
-document.getElementById("inputLinePointB").value = 0;
-
-document.getElementById("inputPointAx").value = -15;
-document.getElementById("inputPointAy").value = 2;
-
-document.getElementById("inputPointBx").value = -11;
-document.getElementById("inputPointBy").value = 12;
-
-document.getElementById("inputPointCx").value = 3;
-document.getElementById("inputPointCy").value = 15;
+﻿
 
 var Parallelogram = {
     A: { x: 0, y: 0 },
