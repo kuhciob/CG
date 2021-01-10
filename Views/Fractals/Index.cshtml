@@ -10,7 +10,7 @@
         <div class="row input-group" style="margin-left: unset;margin-right:unset">
             <div class="col-4">
                 <div class="row" style="width: -webkit-fill-available;">
-                    @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
+                   
                 </div>
                 
             </div>
@@ -30,22 +30,75 @@
             <div class="row params_box" style="vertical-align: middle;">
                 <div class="col" style="padding:0;margin:0;">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-6" style=" align-self: center; ">
+                            <span class="selector_label">Тип фракталу: </span>
+                        </div>
+                        <div class="col-6">
+                            <div > 
+                                @Html.DropDownListFor(m => m.FlactalTypes, new SelectList(Model.FlactalTypes))
+                                <style>
+                                    #FlactalTypes
+                                    {
+                                        width:100%;
+                                    }
+                                </style>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="row">
+                        <div class="col" style=" align-self: center; ">
                             <span class="selector_label">К-кість ітерацій: </span>
                         </div>
                         <div class="col">
-                            <input id="IterationCount" type="number" min="0" step="1" class="frac_params_input" pattern="^[0-9]+$"/>
+                            <input id="IterationCount" type="number" min="0" step="1" class="frac_params_input" pattern="^[0-9]+$" oninput="Warn(this)"/>
+                            <script>
+                                function Warn(e) {
+                                    let fractType = document.getElementById("FlactalTypes").value;
+                                    let iterations = e.value;
+                                    switch (fractType) {
+                                        case "Лінія коха(геометричний)":
+                                            if (iterations > 10) {
+                                                alert("Увага! Така к-кість ітерацій може причинити зависання та нестабільної роботи програми, оберіть кількість меншу 10");
+                                            }
+                                            break;
+                                        case "Лінія коха(IFS)":
+                                            if (iterations > 10) {
+                                                alert("Увага! Така к-кість ітерацій може причинити зависання та нестабільної роботи програми, оберіть кількість меншу 10");
+                                            }
+                                            break;
+                                        case "Папороть Барнслі":
+                                            if (iterations > 10) {
+                                                alert("Увага! Така к-кість ітерацій може причинити зависання та нестабільної роботи програми, оберіть кількість меншу 1'000'000");
+                                            }
+                                           
+                                            break;
+                                        case "\"Дракон\" Хартера-Хейтуея(геометричний)":
+                                            if (iterations > 20) {
+                                                alert("Увага така к-кість ітерацій може причинити зависання та нестабільної роботи програми, оберіть кількість меншу 20");
+                                            }
+                                            break;
+                                        case "\"Дракон\" Хартера-Хейтуея(IFS)":
+                                            if (iterations > 20) {
+                                                alert("Увага така к-кість ітерацій може причинити зависання та нестабільної роботи програми, оберіть кількість меншу 20");
+                                            }
+                                            break;
+
+                                    }
+                                    
+                                }
+                            </script>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col" style=" align-self: center; ">
                             <span class="selector_label">Швидкість: </span>
                         </div>
                         <div class="col">
-                            <input id ="Speed" type="number" min="0" step="1" class="frac_params_input" pattern="^[0-9]+$"/>
+                            <input id="Speed" type="number" min="0" step="1" class="frac_params_input" pattern="^[0-9]+$" />
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="row botton_button_set">

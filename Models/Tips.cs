@@ -55,21 +55,31 @@ namespace CGlab.Models
         }
         #endregion
 
+        //https://www.youtube.com/embed/RRHJlzqrdj0
+        #region Main VideoTip
+        static public string MainVideoTip
+        {
+            get
+            {
+                return "https://www.youtube.com/embed/RRHJlzqrdj0";
+            }
+        }
+        #endregion
         #region VideoTipFractal
         static public string VideoTipFractal
         {
             get
             {
-                return "https://www.youtube.com/embed/DYxzjHdkNR4";
+                return "https://www.youtube.com/embed/RRHJlzqrdj0?start=43";
             }
         }
         #endregion
-        #region VideoTipFractal
+        #region VideoTipColor
         static public string VideoTipColor
         {
             get
             {
-                return "https://www.youtube.com/embed/tC87TaqE4LA";
+                return "https://www.youtube.com/embed/RRHJlzqrdj0?start=96";
             }
         }
         #endregion
@@ -82,12 +92,12 @@ namespace CGlab.Models
             }
         }
         #endregion
-        #region VideoTipFractal
+        #region VideoTipAffin
         static public string VideoTipAfin
         {
             get
             {
-                return "https://www.youtube.com/embed/DYxzjHdkNR4";
+                return "https://www.youtube.com/embed/RRHJlzqrdj0?start=183";
             }
         }
         #endregion

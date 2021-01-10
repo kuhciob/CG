@@ -1,5 +1,13 @@
-﻿
+﻿let coordInputs = document.getElementsByTagName("input");
 
+for (let indx = 0; indx < coordInputs.length; ++indx) {
+    if (coordInputs[indx].type == "number") {
+        coordInputs[indx].addEventListener("input", ValidateNumInput(coordInputs[indx]))
+    }
+}
+function ValidateNumInput(e) {
+    e.value.replace("--", "");
+}
 var Parallelogram = {
     A: { x: 0, y: 0 },
     B: { x: 0, y: 0 },
